@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1017898640983",
+    "firebase_url": "https://sandbattery-default-rtdb.firebaseio.com",
+    "project_id": "sandbattery",
+    "storage_bucket": "sandbattery.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1017898640983:android:4642d81e31698c6c8fa512",
+        "android_client_info": {
+          "package_name": "com.nelmbllc.mower1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBJK0L8_6l7Ajh1KaedlfpJq03LuD4uuk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
