@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:mowerapp/sms_screen.dart';
+import 'locations_screen.dart';
 import 'login_screen.dart';
 import 'map_screen.dart';
 import 'package:animated_fab_button_menu/animated_fab_button_menu.dart';
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FabMenu(
-          fabBackgroundColor: Colors.amber,
+          fabBackgroundColor: Colors.blueGrey,
           elevation: 2.0,
           fabAlignment: Alignment.bottomCenter,
           fabIcon: const Icon(Icons.more_horiz),
@@ -19,7 +22,7 @@ class HomeScreen extends StatelessWidget {
             color: Colors.white,
           ),
           overlayOpacity: 0.5,
-          overlayColor: Colors.amber,
+          overlayColor: Colors.blueAccent,
           children: [
             MenuItem(
               title: 'Home',
@@ -30,8 +33,13 @@ class HomeScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold),
             ),
             MenuItem(
-              title: 'Profile',
-              onTap: () {},
+              title: 'Locations',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const UserMapInfo()),
+                );
+              },
               style: const TextStyle(
                   color: Colors.white,
                   fontSize: 24,
@@ -39,7 +47,12 @@ class HomeScreen extends StatelessWidget {
             ),
             MenuItem(
               title: 'Messages',
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SmsApp()),
+                );
+              },
               style: const TextStyle(
                   color: Colors.white,
                   fontSize: 24,
@@ -66,7 +79,7 @@ class HomeScreen extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => CustomCards()),
+                  MaterialPageRoute(builder: (context) => const CustomCards()),
                 );
               },
               style: const TextStyle(
@@ -84,14 +97,14 @@ class HomeScreen extends StatelessWidget {
             ),
           ]),
       appBar: AppBar(
-        title: Text('Home'),
+        title: const Text('Home'),
         actions: [
           IconButton(
-            icon: Icon(Icons.logout),
+            icon: const Icon(Icons.logout),
             onPressed: () async {
               await FirebaseAuth.instance.signOut();
               Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => LoginScreen()),
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
               );
             },
           ),

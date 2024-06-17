@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_custom_cards/flutter_custom_cards.dart';
 import 'dart:convert';
 import 'dart:developer';
-import 'package:http/http.dart' as http;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -24,30 +22,26 @@ class CustomCardsState extends State<CustomCards> {
     super.initState();
   }
 
-  // https://developers.google.com/books/docs/overview
-  var url =
-      Uri.https('www.googleapis.com', '/books/v1/volumes', {'q': '{http}'});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Custom Cards Example'),
+        title: const Text('Custom Cards Example'),
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              Text('CustomCards'),
+              const Text('CustomCards'),
               Center(
                 child: Wrap(
                   //mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CustomCard(
                       height: 50,
-                      child: FlutterLogo(
+                      child: const FlutterLogo(
                         style: FlutterLogoStyle.horizontal,
                         size: 90,
                       ),
@@ -59,7 +53,7 @@ class CustomCardsState extends State<CustomCards> {
                       childPadding: 10,
                       color: Colors.green,
                       onTap: () {},
-                      child: Center(
+                      child: const Center(
                         child: Text(
                           'http',
                           style: TextStyle(
@@ -79,7 +73,7 @@ class CustomCardsState extends State<CustomCards> {
                       onTap: () {
                         createRecord(context);
                       },
-                      child: Center(
+                      child: const Center(
                         child: Text(
                           'httpcall',
                           style: TextStyle(
@@ -92,7 +86,7 @@ class CustomCardsState extends State<CustomCards> {
                   ],
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Wrap(
                 //mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -102,7 +96,7 @@ class CustomCardsState extends State<CustomCards> {
                     elevation: 5,
                     child: AutoSizeText(
                       responseText,
-                      style: TextStyle(fontSize: 10),
+                      style: const TextStyle(fontSize: 10),
                       maxLines: 8,
                     ),
                   ),
@@ -116,6 +110,11 @@ class CustomCardsState extends State<CustomCards> {
                     onTap: () {
                       log('called');
                     },
+                    child: AutoSizeText(
+                      responseText,
+                      style: const TextStyle(fontSize: 10),
+                      maxLines: 8,
+                    ),
                   ),
                   CustomCard(
                     height: 100,
@@ -127,7 +126,7 @@ class CustomCardsState extends State<CustomCards> {
                     onTap: () {
                       getRecord(context);
                     },
-                    child: Center(
+                    child: const Center(
                       child: Text(
                         'get',
                         style: TextStyle(
@@ -139,45 +138,17 @@ class CustomCardsState extends State<CustomCards> {
                   ),
                 ],
               ),
-              SizedBox(height: 25),
-              Text('Custom3DCards'),
-              Wrap(
-                //mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Custom3DCard(
-                      elevation: 4,
-                      child: SizedBox(
-                        height: 100,
-                        width: 100,
-                        child: Center(
-                          child: FlutterLogo(size: 65),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Custom3DCard(
-                      elevation: 10,
-                      shadowSpread: 5,
-                      shadowColor: Colors.brown.shade400,
-                      child: SizedBox(
-                        height: 100,
-                        width: 100,
-                        child: Center(
-                          child: FlutterLogo(
-                            size: 65,
-                            style: FlutterLogoStyle.stacked,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+              const SizedBox(height: 25),
+              const Text('Custom3DCards'),
+              CustomCard(
+                elevation: 30,
+                shadowColor: Colors.black,
+                color: Colors.green,
+                onTap: () async {},
+                child:
+                    SizedBox(width: 500, height: 300, child: Text('whatever')),
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
             ],
           ),
         ),
@@ -205,38 +176,39 @@ class CustomCardsState extends State<CustomCards> {
   }
 
   void getRecord(context) async {
-    Location location = new Location();
+    Location location = Location();
 
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
-    LocationData _locationData;
+    bool serviceEnabled;
+    PermissionStatus permissionGranted;
+    LocationData locationData;
 
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
+    serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
         return;
       }
     }
 
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
+    permissionGranted = await location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
         return;
       }
     }
 
-    _locationData = await location.getLocation();
-    log(_locationData.toString());
+    locationData = await location.getLocation();
+    log(locationData.toString());
 
     final ref = FirebaseDatabase.instance.ref();
     final snapshot = await ref.child('users/123').get();
     if (snapshot.exists) {
       print(snapshot.value);
-      var info = json.encode(snapshot.value);
+      var info = json.decode(snapshot.value.toString());
+      print(info['name']);
       setState(() {
-        responseText = info;
+        responseText = info['age'];
       });
     } else {
       print('No data available.');
