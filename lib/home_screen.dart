@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mowerapp/database_screen.dart';
 import 'package:mowerapp/sms_screen.dart';
 import 'locations_screen.dart';
 import 'login_screen.dart';
@@ -59,8 +60,13 @@ class HomeScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold),
             ),
             MenuItem(
-              title: 'Feedback',
-              onTap: () {},
+              title: 'DataList',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const DataPage()),
+                );
+              },
               style: const TextStyle(
                   color: Colors.white,
                   fontSize: 24,
@@ -75,7 +81,7 @@ class HomeScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold),
             ),
             MenuItem(
-              title: 'Share',
+              title: 'Cards',
               onTap: () {
                 Navigator.push(
                   context,

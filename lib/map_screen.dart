@@ -6,8 +6,39 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:location/location.dart';
+import 'package:http/http.dart' as http;
 
 var responseText = 'placeholder';
+
+class ResponseModel {
+  int? userId;
+  int? id;
+  String? title;
+  String? body;
+
+  ResponseModel({
+    this.userId,
+    this.id,
+    this.title,
+    this.body,
+  });
+
+  ResponseModel.fromJson(dynamic json) {
+    userId = json['operationalMode'];
+    id = json['id'];
+    title = json['title'];
+    body = json['body'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['userId'] = userId;
+    map['id'] = id;
+    map['title'] = title;
+    map['body'] = body;
+    return map;
+  }
+}
 
 class CustomCards extends StatefulWidget {
   const CustomCards({super.key});
@@ -104,15 +135,15 @@ class CustomCardsState extends State<CustomCards> {
                     height: 100,
                     width: 100,
                     elevation: 5,
-                    borderRadius: 50,
+                    borderRadius: 150,
                     color: Colors.green,
                     hoverColor: Colors.yellow,
                     onTap: () {
-                      log('called');
+                      fetchData();
                     },
-                    child: AutoSizeText(
-                      responseText,
-                      style: const TextStyle(fontSize: 10),
+                    child: const AutoSizeText(
+                      'ppppppp',
+                      style: TextStyle(fontSize: 10),
                       maxLines: 8,
                     ),
                   ),
@@ -144,9 +175,11 @@ class CustomCardsState extends State<CustomCards> {
                 elevation: 30,
                 shadowColor: Colors.black,
                 color: Colors.green,
-                onTap: () async {},
-                child:
-                    SizedBox(width: 500, height: 300, child: Text('whatever')),
+                onTap: () async {
+                  readData();
+                },
+                child: const SizedBox(
+                    width: 500, height: 300, child: Text('whatever')),
               ),
               const SizedBox(height: 30),
             ],
@@ -154,6 +187,30 @@ class CustomCardsState extends State<CustomCards> {
         ),
       ),
     );
+  }
+
+  Future<String> fetchData() async {
+    Location location = Location();
+    var locationData = await location.getLocation();
+    log(locationData.latitude.toString());
+    // Replace this URL with your API endpoint
+    var urlWeather =
+        'https://forecast.weather.gov/MapClick.php?lat=${locationData.latitude}&lon=${locationData.longitude}&FcstType=json';
+    final response =
+        //await http.get(Uri.parse('https://jsonplaceholder.typicode.com/posts'));
+        await http.get(Uri.parse(urlWeather));
+    if (response.statusCode == 200) {
+      // If the call to the server was successful, parse the JSON
+
+      final data = jsonDecode(response.body);
+      print(data['currentobservation']);
+      final cobs = data['currentobservation'];
+      print(cobs['Temp']);
+      return data; //data.map((json) => ResponseModel.fromJson(json)).toList();
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Failed to load data');
+    }
   }
 
   void createRecord(context) async {
@@ -202,13 +259,16 @@ class CustomCardsState extends State<CustomCards> {
     log(locationData.toString());
 
     final ref = FirebaseDatabase.instance.ref();
-    final snapshot = await ref.child('users/123').get();
+    final snapshot = await ref
+        .child(
+            '/mowerData/-NtgaLhJZiCB4TvegsJQ/data/attributes/battery/batteryPercent')
+        .get();
     if (snapshot.exists) {
       print(snapshot.value);
       var info = json.decode(snapshot.value.toString());
-      print(info['name']);
+
       setState(() {
-        responseText = info['age'];
+        responseText = json.encode(snapshot.value);
       });
     } else {
       print('No data available.');
@@ -219,5 +279,35 @@ class CustomCardsState extends State<CustomCards> {
         text: 'Sorry, something went wrong',
       );
     }
+  }
+}
+
+void readData() async {
+  final ref = FirebaseDatabase.instance.ref();
+  final snapshot = await ref.child('mowerData').get();
+  if (snapshot.exists) {
+    print(snapshot.value);
+    //snapshot.value
+    Map<dynamic, dynamic>? x;
+    x = snapshot.value as Map?;
+    //   String x = jsonEncode(snapshot.value);
+    // snapshot.value!.forEach();
+    var value = Map<String, dynamic>.from(snapshot.value as Map);
+    print('val');
+    print(value);
+    var title = value["soc"];
+    print(value.length);
+    // print(interpolation.traverse(x as Map?, 'battery'));
+    for (var i = 0; i < value.length; i++) {
+      //print(value[i]);
+      //print(title);
+
+      // print(x[i]);
+      //  mainDataList.add(snapshot.value[i]['Item'].toString() +
+      //     ' Qty: ' +
+      //    snapshot.value?[i]['qty'].toString();;);
+    }
+  } else {
+    print('No data available.');
   }
 }

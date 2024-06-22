@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:quickalert/quickalert.dart';
 
 class SmsApp extends StatefulWidget {
   const SmsApp({Key? key}) : super(key: key);
@@ -83,10 +84,10 @@ class _MessagesListView extends StatelessWidget {
 
         return ListTile(
           shape: RoundedRectangleBorder(
-            side: BorderSide(color: Colors.black, width: 1),
+            side: const BorderSide(color: Colors.black, width: 1),
             borderRadius: BorderRadius.circular(5),
           ),
-          leading: Icon(
+          leading: const Icon(
             Icons.question_answer_outlined,
             color: Colors.blue,
             size: 25,
@@ -94,13 +95,50 @@ class _MessagesListView extends StatelessWidget {
           selectedTileColor: Colors.orange[100],
           title: Text('${message.sender} [${message.date}]'),
           subtitle: Text('${message.body}'),
-          onTap: () => saveToClient(message),
+          onTap: () => saveToClient(message, context),
         );
       },
     );
   }
 }
 
-saveToClient(sms) {
+saveToClient(sms, context) {
+  QuickAlert.show(
+    context: context,
+    type: QuickAlertType.custom,
+    barrierDismissible: true,
+    confirmBtnText: 'Save',
+    customAsset: 'assets/imgs/ewatchcrop.png',
+    widget: TextFormField(
+      decoration: const InputDecoration(
+        alignLabelWithHint: true,
+        hintText: 'Enter Phone Number',
+        prefixIcon: Icon(
+          Icons.phone_outlined,
+        ),
+      ),
+      textInputAction: TextInputAction.next,
+      keyboardType: TextInputType.phone,
+      onChanged: (value) => sms = value,
+    ),
+    onConfirmBtnTap: () async {
+      if (sms.length < 5) {
+        await QuickAlert.show(
+          context: context,
+          type: QuickAlertType.error,
+          text: 'Please input something',
+        );
+        return;
+      }
+      Navigator.pop(context);
+      await Future.delayed(const Duration(milliseconds: 1000));
+      await QuickAlert.show(
+        context: context,
+        type: QuickAlertType.success,
+        text: "Phone number '$sms' has been saved!.",
+      );
+    },
+  );
+
   print(sms.body);
 }
