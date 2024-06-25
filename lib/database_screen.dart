@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 
@@ -24,7 +23,8 @@ class _DataPageState extends State<DataPage> {
         var strDate = convertTimestampToDate(
             value['data']['attributes']['metadata']['statusTimestamp']);
 
-        items.add('Battery Perc: ${value['data']['attributes']['battery']['batteryPercent']}  @ $strDate');
+        items.add(
+            'Battery Perc: ${value['data']['attributes']['battery']['batteryPercent']}  @ $strDate');
       });
       setState(() {
         _items = items;

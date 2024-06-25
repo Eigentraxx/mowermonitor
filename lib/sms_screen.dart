@@ -95,14 +95,17 @@ class _MessagesListView extends StatelessWidget {
           selectedTileColor: Colors.orange[100],
           title: Text('${message.sender} [${message.date}]'),
           subtitle: Text('${message.body}'),
-          onTap: () => saveToClient(message, context),
+          onTap: () => saveToClient(message.sender, message.body, context),
         );
       },
     );
   }
 }
 
-saveToClient(sms, context) {
+saveToClient(sms, smsbody, context) {
+  var customerToAssociate = '';
+  var senderNumber = sms;
+  var senderMessage = smsbody;
   QuickAlert.show(
     context: context,
     type: QuickAlertType.custom,
@@ -112,33 +115,23 @@ saveToClient(sms, context) {
     widget: TextFormField(
       decoration: const InputDecoration(
         alignLabelWithHint: true,
-        hintText: 'Enter Phone Number',
+        hintText: 'customer',
         prefixIcon: Icon(
-          Icons.phone_outlined,
+          Icons.telegram,
         ),
       ),
       textInputAction: TextInputAction.next,
-      keyboardType: TextInputType.phone,
-      onChanged: (value) => sms = value,
+      keyboardType: TextInputType.text,
+      onChanged: (value) => customerToAssociate = value,
     ),
     onConfirmBtnTap: () async {
-      if (sms.length < 5) {
-        await QuickAlert.show(
-          context: context,
-          type: QuickAlertType.error,
-          text: 'Please input something',
-        );
-        return;
-      }
       Navigator.pop(context);
       await Future.delayed(const Duration(milliseconds: 1000));
       await QuickAlert.show(
         context: context,
         type: QuickAlertType.success,
-        text: "Phone number '$sms' has been saved!.",
+        text: "$senderMessage' has been saved to $customerToAssociate",
       );
     },
   );
-
-  print(sms.body);
 }

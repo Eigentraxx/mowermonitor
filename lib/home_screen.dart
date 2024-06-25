@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:mowerapp/contacts_screen.dart';
 import 'package:mowerapp/database_screen.dart';
+import 'package:mowerapp/mowercmds_screen.dart';
+import 'package:mowerapp/powerstate_screen.dart';
 import 'package:mowerapp/sms_screen.dart';
 import 'locations_screen.dart';
 import 'login_screen.dart';
@@ -26,8 +30,14 @@ class HomeScreen extends StatelessWidget {
           overlayColor: Colors.blueAccent,
           children: [
             MenuItem(
-              title: 'Home',
-              onTap: () {},
+              title: 'Contacts',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => FlutterContactsExample()),
+                );
+              },
               style: const TextStyle(
                   color: Colors.white,
                   fontSize: 24,
@@ -73,8 +83,13 @@ class HomeScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold),
             ),
             MenuItem(
-              title: 'Settings',
-              onTap: () {},
+              title: 'Solar Power Data',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PowerPage()),
+                );
+              },
               style: const TextStyle(
                   color: Colors.white,
                   fontSize: 24,
@@ -94,8 +109,13 @@ class HomeScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold),
             ),
             MenuItem(
-              title: 'Get in touch!',
-              onTap: () {},
+              title: 'Mower Commands',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CommandPage()),
+                );
+              },
               style: const TextStyle(
                   color: Colors.white,
                   fontSize: 24,
