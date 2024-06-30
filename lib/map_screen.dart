@@ -32,12 +32,14 @@ class CustomCardsState extends State<CustomCards> {
   Set<Polygon> _polygons = {};
   List<LatLng> _gridPoints = [];
   List perimeterList = [];
+  String gridMetrics = 'pending...';
   BitmapDescriptor secondIcon = BitmapDescriptor.defaultMarker;
   @override
   void initState() {
     super.initState();
     addCustomIcon();
     getLocation();
+    gridMetrics = 'pending';
   }
 
   void addCustomIcon() {
@@ -83,7 +85,7 @@ class CustomCardsState extends State<CustomCards> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              const Text('CustomCards'),
+              const Text('Site Work'),
               Center(
                 child: Wrap(
                   //mainAxisAlignment: MainAxisAlignment.center,
@@ -100,7 +102,7 @@ class CustomCardsState extends State<CustomCards> {
                       },
                       child: const Center(
                         child: Text(
-                          'Set Pin',
+                          'Save Area',
                           style: TextStyle(
                             fontSize: 20,
                             color: Colors.white,
@@ -112,7 +114,7 @@ class CustomCardsState extends State<CustomCards> {
                 ),
               ),
               const SizedBox(height: 25),
-              const Text('Custom3DCards'),
+              const Text('Work Map'),
               _isLoading
                   ? const Center(
                       child: CircularProgressIndicator(),
@@ -150,7 +152,7 @@ class CustomCardsState extends State<CustomCards> {
                 },
                 child: const Center(
                   child: Text(
-                    'Save locations',
+                    'Create Areas',
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.white,
@@ -158,6 +160,22 @@ class CustomCardsState extends State<CustomCards> {
                   ),
                 ),
               ),
+              const SizedBox(height: 25),
+              CustomCard(
+                color: Colors.white,
+                hoverColor: Colors.indigo,
+                splashColor: Colors.white,
+                onTap: () {},
+                child: const Center(
+                  child: Text(
+                    'pending',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              )
             ],
           ),
         ),
@@ -203,6 +221,13 @@ class CustomCardsState extends State<CustomCards> {
 
     print('Perimeter: $perimeter meters');
     print('Area: $area square meters');
+    String x =
+        'Perimeter length: ${perimeter.toStringAsFixed(2)} Area: ${area.toStringAsFixed(2)}';
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.success,
+      text: x,
+    );
     _generateGridPoints(polygonCoords);
   }
 

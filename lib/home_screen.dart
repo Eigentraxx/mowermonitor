@@ -96,7 +96,7 @@ class HomeScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold),
             ),
             MenuItem(
-              title: 'Cards',
+              title: 'Map & Grid',
               onTap: () {
                 Navigator.push(
                   context,

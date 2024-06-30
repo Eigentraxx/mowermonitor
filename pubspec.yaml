@@ -29,6 +29,7 @@ dependencies:
   intl: ^0.19.0
   google_maps_utils: ^2.0.0+1
   maps_toolkit: ^3.0.0
+  json_table: ^2.0.1
   
 
 dev_dependencies:
