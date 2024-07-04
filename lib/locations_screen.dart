@@ -4,6 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:geolocator/geolocator.dart';
 import 'database_screen.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class UserMapInfo extends StatefulWidget {
   const UserMapInfo({Key? key}) : super(key: key);
@@ -73,6 +74,7 @@ class _UserMapInfoState extends State<UserMapInfo> {
   }
 
   getLocation() async {
+    var status = await Permission.locationWhenInUse.request();
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     double lat = position.latitude;
